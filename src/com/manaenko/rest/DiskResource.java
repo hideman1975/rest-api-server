@@ -29,7 +29,7 @@ import org.eclipse.persistence.oxm.MediaType;
 @Path("disks")
 public class DiskResource {
 
-	public DiskService ds = new DiskService("jdbc:mysql://localhost:3306/mysql", "root", "");
+	public DiskService ds = new DiskService("jdbc:mysql://localhost:3306/disk_rent", "root", "");
 	
 	@Path("test")
 	@GET
@@ -45,10 +45,12 @@ public class DiskResource {
 			@FormParam("id") int id,  
 			@FormParam("title") String title,  
 			@FormParam("year") String year,
-			@FormParam("genre") String genre) throws SQLException {
+			@FormParam("genre") String genre,
+			@FormParam("client") int client)
+	throws SQLException {
 		System.out.println("Фильм создан - "+title + " - " + genre + " - " + year);
 		
-		Disk disk = new Disk(id,title, genre, year);
+		Disk disk = new Disk(id,title, genre, year, client);
 		if (id == 0){
 		ds.newDisk(disk);
 		} else ds.updateDisk(disk);
@@ -86,15 +88,32 @@ public class DiskResource {
 			for(Disk disk : ds.listAllDisks()) theBuilder.add(diskToJSON(disk));
 			return theBuilder.build();
 		}
+		
+		@Path("director_id/{directorId}")
+		@GET
+		public JsonArray SelectToJson(@PathParam("directorId") int directorId) throws SQLException{
+			JsonArrayBuilder theBuilder = Json.createArrayBuilder();
+			for(Disk disk : ds.listByDirector(directorId)) theBuilder.add(diskToJSON(disk));
+			return theBuilder.build();
+		}
+		
+		@Path("client_id/{clientId}")
+		@GET
+		public JsonArray SelectToJsonByClient(@PathParam("clientId") int clientId) throws SQLException{
+			JsonArrayBuilder theBuilder = Json.createArrayBuilder();
+			for(Disk disk : ds.listByClient(clientId)) theBuilder.add(diskToJSON(disk));
+			return theBuilder.build();
+		}
 
 		//Преобразует объект MailMessage в JSON
 	public JsonObject diskToJSON(Disk ds2){
 		
 		JsonObjectBuilder theBuilder = Json.createObjectBuilder();
-		theBuilder.add("id", ds2.id);	
-		theBuilder.add("title", ds2.title);
+			theBuilder.add("id", ds2.id);	
+			theBuilder.add("title", ds2.title);
 			theBuilder.add("genre", ds2.genre);
 			theBuilder.add("year", ds2.year);
+			theBuilder.add("client", ds2.client);
 		JsonObject jsonObject = theBuilder.build();
 		//Json.createWriter(System.out).write(jsonObject);
 		//response.

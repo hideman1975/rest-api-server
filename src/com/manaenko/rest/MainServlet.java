@@ -46,10 +46,25 @@ public class MainServlet extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter writer = response.getWriter();
 		writer.println("<h2>в Main Сервлете</h2>");
+		writer.println("<hr>");
 		writer.println("<p><a href='rest-api_03/resources/disks/test'>Тест Ресурсов API</a></p>");
 		writer.println("<p><a href='rest-api_03/resources/disks/alldisks'>Все диски XML</a></p>");
 		writer.println("<p><a href='rest-api_03/resources/disks/alljson'>Все диски JSON</a></p>");
 		writer.println("<p><a href='rest-api_03/resources/disks/getdisk/2'>Один диск JSON</a></p>");
+		writer.println("<hr>");
+		writer.println("<p><a href='rest-api_03/resources/director/getdirector/2'>Один директор JSON</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/director/alljson'>Все директора JSON</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/director/alldirectors'>Все директора XML</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/director/post'>Только для постовых запросов</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/disks/director_id/3'>Диски по директору</a></p>");
+		writer.println("<hr>");
+		writer.println("<p><a href='rest-api_03/resources/client/getclient/2'>Один Client JSON</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/client/alljson'>Все Clients JSON</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/client/allclients'>Все Clients XML</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/client/post'>Только для постовых запросов</a></p>");
+		writer.println("<p><a href='rest-api_03/resources/disks/client_id/3'>Диски по Клиенту</a></p>");
+		writer.println("<hr>");
+		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 

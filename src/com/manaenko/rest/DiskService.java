@@ -60,6 +60,7 @@ public class DiskService {
 			disk.title = resultSet.getString("title");
 			disk.genre = resultSet.getString("genre");
 			disk.year = resultSet.getString("year");
+			disk.client = resultSet.getInt("client");
 			listDisk.add(disk);
 		}
 		
@@ -86,6 +87,7 @@ public class DiskService {
 			disk.title = resultSet.getString("title");
 			disk.genre = resultSet.getString("genre");
 			disk.year = resultSet.getString("year");
+			disk.client = resultSet.getInt("client");
 			
 		}	else {
 			disk.id = 666;
@@ -100,9 +102,71 @@ public class DiskService {
 		return disk;
 	}
 	
-	public void newDisk(Disk disk) throws SQLException {
+	//По директору выбрать фильмы
+	
+	public List<Disk> listByDirector(int directorId) throws SQLException{
+		List<Disk> listDisk = new ArrayList<>();
+		String sql = "SELECT * FROM disk WHERE `film_director` = "+directorId;
 		
-		String sql = "INSERT INTO `disk` (`title`, `genre`, `year`) VALUES ('"+ disk.title +"', '"+ disk.genre+"', '"+ disk.year+ "');";
+		connect();
+		
+		Statement statement = jdbcConnection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql);
+		
+		while (resultSet.next()) {
+			Disk disk = new Disk();
+			
+			disk.id = resultSet.getInt("id");
+			disk.title = resultSet.getString("title");
+			disk.genre = resultSet.getString("genre");
+			disk.year = resultSet.getString("year");
+			disk.client = resultSet.getInt("client");
+			listDisk.add(disk);
+		}
+		
+		resultSet.close();
+		statement.close();
+		
+		disconnect();
+		
+		
+		return listDisk;
+		
+	}
+	
+	public List<Disk> listByClient(int clientId) throws SQLException{
+		List<Disk> listDisk = new ArrayList<>();
+		String sql = "SELECT * FROM disk WHERE `client` = "+clientId;
+		
+		connect();
+		
+		Statement statement = jdbcConnection.createStatement();
+		ResultSet resultSet = statement.executeQuery(sql);
+		
+		while (resultSet.next()) {
+			Disk disk = new Disk();
+			
+			disk.id = resultSet.getInt("id");
+			disk.title = resultSet.getString("title");
+			disk.genre = resultSet.getString("genre");
+			disk.year = resultSet.getString("year");
+			disk.client = resultSet.getInt("client");
+			listDisk.add(disk);
+		}
+		
+		resultSet.close();
+		statement.close();
+		
+		disconnect();
+		
+		
+		return listDisk;
+		
+	}
+	
+	public void newDisk(Disk disk) throws SQLException {
+		System.out.println("New disk running");
+		String sql = "INSERT INTO `disk` (`title`, `genre`, `year`, `client`) VALUES ('"+ disk.title +"', '"+ disk.genre+"', '"+ disk.year+ "','0');";
 		connect();
 		Statement statement = jdbcConnection.createStatement();
 		int resultSet = statement.executeUpdate(sql);
@@ -114,8 +178,9 @@ public class DiskService {
 public void updateDisk(Disk disk) throws SQLException {
 				
 		String sql = "UPDATE `disk` SET `title` = '"+ disk.title +"',"
-				+ " `genre` = '"+ disk.genre+"', `year` = '"+
-				disk.year+"' WHERE `disk`.`id` = "+ disk.id+";";
+				+ " `genre` = '"+ disk.genre+"', `year` = '"+disk.year+
+				"', `client` = '"+disk.client+
+				"' WHERE `disk`.`id` = "+ disk.id+";";
 		connect();
 		Statement statement = jdbcConnection.createStatement();
 		int resultSet = statement.executeUpdate(sql);
@@ -125,7 +190,7 @@ public void updateDisk(Disk disk) throws SQLException {
 	}
 
 public void deleteDisk(int id) throws SQLException {
-	String sql = "DELETE FROM `mysql`.`disk` WHERE  `id`="+id+";";
+	String sql = "DELETE FROM `disk_rent`.`disk` WHERE  `id`="+id+";";
 	connect();
 	Statement statement = jdbcConnection.createStatement();
 	int resultSet = statement.executeUpdate(sql);
